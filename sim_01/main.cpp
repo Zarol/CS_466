@@ -16,6 +16,7 @@ void inputProcess( std::string, int, int );
 void outputProcess( std::string, int, int );
 void applicationLoop( std::vector<std::string>, int );
 void simulatorLoop( std::vector<std::string> );
+void setElapsedTime();
 void printConfig();
 
 std::clock_t startTime;
@@ -198,21 +199,21 @@ std::vector<std::string> parseOperation( std::string data )
 
 void runProcess( int cycleTime, int appID )
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID 
         << ": START processing action" << std::endl;
             
     int sleepTime = cycleTime * config.processorCycle;
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID 
         << ": END processing action" << std::endl;
 }
 
 void runInput( std::string name, int cycleTime, int appID )
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID << ": START " << 
         name << " input" << std::endl;
             
@@ -235,14 +236,14 @@ void runInput( std::string name, int cycleTime, int appID )
     }
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID << ": END " << 
         name << " input" << std::endl;
 }
 
 void runOutput( std::string name, int cycleTime, int appID )
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID << ": START " << 
         name << " output" << std::endl;
             
@@ -265,14 +266,14 @@ void runOutput( std::string name, int cycleTime, int appID )
     }
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - Process " << appID << ": END " << 
         name << " output" << std::endl;
 }
 
 void applicationLoop( std::vector<std::string> operations, int appID )
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - OS: START process " << appID << std::endl;
 
     for( unsigned int i = 0; i < operations.size(); i++ )
@@ -297,13 +298,13 @@ void applicationLoop( std::vector<std::string> operations, int appID )
         }
     }
 
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - END process " << appID << std::endl;
 }
 
 void simulatorLoop( std::vector<std::string> operations )
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - <Simulator START>" << std::endl;
 
     //Reverse the vector so the operations may be popped in order
@@ -319,7 +320,7 @@ void simulatorLoop( std::vector<std::string> operations )
 
         if( parsedOp[0] == "A" && parsedOp[1] == "start" )
         {
-            duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+            setElapsedTime();
             std::cout << duration << " - OS: PREPARING process " << appID 
                 << std::endl;
 
@@ -335,18 +336,24 @@ void simulatorLoop( std::vector<std::string> operations )
                 parsedOp = parseOperation( operations.back() );
             }
 
-            std::thread appThread = ( applicationLoop, appOperations, appID );
+            std::thread appThread( applicationLoop, appOperations, appID );
             appThread.join();
         }
         operations.pop_back();
     }
 
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    setElapsedTime();
     std::cout << duration << " - <Simulator END>" << std::endl;
+}
+
+void setElapsedTime()
+{
+    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
 }
 
 void printConfig()
 {
+    std::cout << "##   CONFIG FILE   ##" << std::endl;
     std::cout << config.version << std::endl;
     std::cout << config.filePath << std::endl;
     std::cout << config.processorCycle << std::endl;
@@ -356,4 +363,5 @@ void printConfig()
     std::cout << config.keyboardCycle << std::endl;
     std::cout << config.log << std::endl;
     std::cout << config.logFilePath << std::endl;
+    std::cout << "## END CONFIG FILE ##" << std::endl;
 }
