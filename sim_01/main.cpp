@@ -319,22 +319,24 @@ void simulatorLoop( std::vector<std::string> operations )
 
         if( parsedOp[0] == "A" && parsedOp[1] == "start" )
         {
-            appID++;
             duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
             std::cout << duration << " - OS: PREPARING process " << appID 
                 << std::endl;
 
-            std::vector<std::string> applicationOperations;
+            appID++;
+
+            std::vector<std::string> appOperations;
             operations.pop_back();
             parsedOp = parseOperation( operations.back() );
             while( parsedOp[0] != "A" && parsedOp[1] != "end" )
             {
-                applicationOperations.push_back( operations.back() );
+                appOperations.push_back( operations.back() );
                 operations.pop_back();
                 parsedOp = parseOperation( operations.back() );
             }
 
-            applicationLoop( applicationOperations, appID );
+            std::thread appThread = ( applicationLoop, appOperations, appID );
+            appThread.join();
         }
         operations.pop_back();
     }
