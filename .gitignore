@@ -30,3 +30,8 @@
 
 # Debug files
 *.dSYM/
+
+# Project Exe (exe names are required to be the way they are, and as a result I 
+# cannot append .exe to every compiled binary and simply ignore all .exes)
+family
+sim01
