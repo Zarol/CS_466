@@ -1,5 +1,8 @@
+//@todo IMPLEMENT WRITING TO FILE / OPTION TO LOG TO FILE OR CONSOLE OR BOTH
+
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
 #include <vector>
 #include <thread>
@@ -16,11 +19,15 @@ void inputProcess( std::string, int, int );
 void outputProcess( std::string, int, int );
 void applicationLoop( std::vector<std::string>, int );
 void simulatorLoop( std::vector<std::string> );
+void writeLog( std::string );
 void setElapsedTime();
 void printConfig();
 
 std::clock_t startTime;
 float duration;
+
+std::stringstream logOutput;
+std::ofstream outputFile;
 
 struct Config
 {
@@ -39,8 +46,8 @@ int main( int argc, char** argv )
 {    
     startTime = std::clock();
 
-    std::cout.precision( 6 );
-    std::cout.setf( std::ios::fixed );
+    logOutput.precision( 6 );
+    logOutput.setf( std::ios::fixed );
     if( argc == 2 )
     {
         std::string configFile = loadData ( argv[1] );
@@ -51,6 +58,9 @@ int main( int argc, char** argv )
             parseOperation( operations[2] );
         
         simulatorLoop( operations );
+
+        if( outputFile.is_open() )
+            outputFile.close();
 
         return EXIT_SUCCESS;
     }
@@ -200,22 +210,28 @@ std::vector<std::string> parseOperation( std::string data )
 void runProcess( int cycleTime, int appID )
 {
     setElapsedTime();
-    std::cout << duration << " - Process " << appID 
+    logOutput << duration << " - Process " << appID 
         << ": START processing action" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
             
     int sleepTime = cycleTime * config.processorCycle;
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
     setElapsedTime();
-    std::cout << duration << " - Process " << appID 
+    logOutput << duration << " - Process " << appID 
         << ": END processing action" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 }
 
 void runInput( std::string name, int cycleTime, int appID )
 {
     setElapsedTime();
-    std::cout << duration << " - Process " << appID << ": START " << 
+    logOutput << duration << " - Process " << appID << ": START " << 
         name << " input" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
             
     int sleepTime = 0;
     if( name == "hard drive" )
@@ -237,15 +253,19 @@ void runInput( std::string name, int cycleTime, int appID )
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
     setElapsedTime();
-    std::cout << duration << " - Process " << appID << ": END " << 
+    logOutput << duration << " - Process " << appID << ": END " << 
         name << " input" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 }
 
 void runOutput( std::string name, int cycleTime, int appID )
 {
     setElapsedTime();
-    std::cout << duration << " - Process " << appID << ": START " << 
+    logOutput << duration << " - Process " << appID << ": START " << 
         name << " output" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
             
     int sleepTime = 0;
     if( name == "hard drive" )
@@ -267,14 +287,18 @@ void runOutput( std::string name, int cycleTime, int appID )
     std::this_thread::sleep_for( std::chrono::milliseconds( sleepTime ) );
 
     setElapsedTime();
-    std::cout << duration << " - Process " << appID << ": END " << 
+    logOutput << duration << " - Process " << appID << ": END " << 
         name << " output" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 }
 
 void applicationLoop( std::vector<std::string> operations, int appID )
 {
     setElapsedTime();
-    std::cout << duration << " - OS: START process " << appID << std::endl;
+    logOutput << duration << " - OS: START process " << appID << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 
     for( unsigned int i = 0; i < operations.size(); i++ )
     {
@@ -299,13 +323,17 @@ void applicationLoop( std::vector<std::string> operations, int appID )
     }
 
     setElapsedTime();
-    std::cout << duration << " - END process " << appID << std::endl;
+    logOutput << duration << " - OS: END process " << appID << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 }
 
 void simulatorLoop( std::vector<std::string> operations )
 {
     setElapsedTime();
-    std::cout << duration << " - <Simulator START>" << std::endl;
+    logOutput << duration << " - <Simulator START>" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
 
     //Reverse the vector so the operations may be popped in order
     std::reverse( operations.begin(), operations.end() );
@@ -321,10 +349,12 @@ void simulatorLoop( std::vector<std::string> operations )
         if( parsedOp[0] == "A" && parsedOp[1] == "start" )
         {
             setElapsedTime();
-            std::cout << duration << " - OS: PREPARING process " << appID 
-                << std::endl;
-
             appID++;
+            logOutput << duration << " - OS: PREPARING process " << appID 
+                << std::endl;
+            writeLog( logOutput.str() );
+            logOutput.str( std::string() );
+
 
             std::vector<std::string> appOperations;
             operations.pop_back();
@@ -343,7 +373,30 @@ void simulatorLoop( std::vector<std::string> operations )
     }
 
     setElapsedTime();
-    std::cout << duration << " - <Simulator END>" << std::endl;
+    logOutput << duration << " - <Simulator END>" << std::endl;
+    writeLog( logOutput.str() );
+    logOutput.str( std::string() );
+}
+
+void writeLog( std::string output )
+{
+    if( config.log == "Log to Both" )
+    {
+        std::cout << output;
+        if( !outputFile.is_open() )
+            outputFile.open( config.logFilePath );
+        outputFile << output;
+    }
+    else if( config.log == "Log to Monitor" )
+    {
+        std::cout << output;
+    }
+    else if( config.log == "Log to File" )
+    {
+        if( !outputFile.is_open() )
+            outputFile.open( config.logFilePath );
+        outputFile << output;
+    }
 }
 
 void setElapsedTime()
