@@ -22,6 +22,7 @@
 //
 // FORWARD DECLARATIONS ////////////////////////////////////////////////////////
 // 
+
 std::string loadData( std::string );
 void parseConfig( std::string );
 std::vector<std::string> splitMetaData( std::string );
@@ -95,23 +96,16 @@ int main( int argc, char** argv )
     logOutput.precision( 6 );
     logOutput.setf( std::ios::fixed );
 
-    // The program was executed with a file path
     if( argc == 2 )
     {
-        // Load the config file contents into a string
+        // Load & parse config file
         std::string configFile = loadData ( argv[1] );
-
-        // Load the Config struct with the data from the file
         parseConfig( configFile );
 
-        // Load the meta-data file contents into a string
+        // Load & split meta data to make it easily parsable
         std::string data = loadData ( config.filePath );
-
-        // Split all meta-data operations into a vector, so individual
-        // operations may be parsed more easily
         std::vector<std::string> operations = splitMetaData( data );
         
-        // Begin the main simulation loop
         simulatorLoop( operations );
 
         // Close the output log file
@@ -120,7 +114,6 @@ int main( int argc, char** argv )
 
         return EXIT_SUCCESS;
     }
-    // There was no file path or extrenous arguments
     else
     {
         std::cout << "WARNING: Invalid number of arguments." << std::endl;
