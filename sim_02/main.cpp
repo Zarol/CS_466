@@ -165,66 +165,57 @@ std::string loadData( std::string path )
  */
 void parseConfig( std::string data )
 {
-    size_t frontPos = 0; 
-    size_t backPos = 0;
-
     //Remove useless first line
     data.erase( 0, data.find( '\n' ) + 1 );
-    //Version
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.version = data.substr( frontPos, backPos - frontPos );
-    data.erase( 0, backPos + 1 );
-    //File Path
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.filePath = data.substr( frontPos, backPos - frontPos );
-    data.erase( 0, backPos + 1 );
-    // CPU Scheduling Code
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.schedulingCode = data.substr( frontPos, backPos - frontPos );
-    data.erase( 0, backPos + 1 );
-    //Processor Cycle Time
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.processorCycle = std::stoi(
-        data.substr( frontPos, backPos - frontPos ));
-    data.erase( 0, backPos + 1 );
-    //Monitor Display Time
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.monitorDisplayCycle = std::stoi(
-        data.substr( frontPos, backPos - frontPos ));
-    data.erase( 0, backPos + 1 );
-    //Hard Drive Cycle Time
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.hardDriveCycle = std::stoi(
-        data.substr( frontPos, backPos - frontPos ));
-    data.erase( 0, backPos + 1 );
-    //Printer Cycle Time
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.printerCycle = std::stoi(
-        data.substr( frontPos, backPos - frontPos ));
-    data.erase( 0, backPos + 1 );
-    //Keyboard Cycle Time
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.keyboardCycle = std::stoi(
-        data.substr( frontPos, backPos - frontPos ));
-    data.erase( 0, backPos + 1 );
-    //Log
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.log = data.substr( frontPos, backPos - frontPos );
-    data.erase( 0, backPos + 1 );
-    //Log File Path
-    frontPos = data.find( ": " ) + 2;
-    backPos = data.find( '\n' );
-    config.logFilePath = data.substr( frontPos, backPos - frontPos );
-    data.erase( 0, backPos + 1 );
+
+    for( int lineNumber = 0; lineNumber < 10; lineNumber++ )
+    {
+        size_t frontPos = data.find( ": " ) + 2;
+        size_t backPos = data.find( '\n' );
+
+        switch( lineNumber )
+        {
+            case 0:
+                config.version = data.substr( frontPos, backPos - frontPos );
+                break;
+            case 1:
+                config.filePath = data.substr( frontPos, backPos - frontPos );
+                break;
+            case 2:
+                config.schedulingCode = data.substr( frontPos, backPos - frontPos );
+                break;
+            case 3:
+                config.processorCycle = std::stoi( 
+                    data.substr( frontPos, backPos - frontPos ));
+                break;
+            case 4:
+                config.monitorDisplayCycle = std::stoi( 
+                    data.substr( frontPos, backPos - frontPos ));
+                break;
+            case 5:
+                config.hardDriveCycle = std::stoi( 
+                    data.substr( frontPos, backPos - frontPos ));
+                break;
+            case 6:
+                config.printerCycle = std::stoi( 
+                    data.substr( frontPos, backPos - frontPos ));
+                break;
+            case 7:
+                config.keyboardCycle = std::stoi( 
+                    data.substr( frontPos, backPos - frontPos ));
+                break;
+            case 8:
+                config.log = data.substr( frontPos, backPos - frontPos );
+                break;
+            case 9:
+                config.logFilePath = data.substr( frontPos, backPos - frontPos );
+                break;
+            default:
+                break;
+        }
+
+        data.erase( 0, backPos + 1 );
+    }
 }
 
 /**
@@ -238,17 +229,16 @@ void parseConfig( std::string data )
  */
 std::vector<std::string> splitMetaData( std::string data )
 {
-    std::vector<std::string> temp;
-    std::string delimiter = "; ";
-    
-    size_t pos = 0;
-    std::string token;
 
     // Remove the first line (contains "Start Program Meta-Data Code:")
     data.erase( 0, data.find( '\n' ) + 1 );
     // Remove all new line characters
     data.erase( std::remove( data.begin(), data.end(), '\n' ), data.end() );
 
+    size_t pos = 0;
+    std::string token;
+    std::vector<std::string> temp;
+    std::string delimiter = "; ";
     // Grab all the operations ending with ";"
     while( ( pos = data.find( delimiter ) ) != std::string::npos )
     {
@@ -462,7 +452,7 @@ void runProcess( int cycleTime, int appID )
  * @brief      Executes an input operation "I" with a defined wait time and a
  * defined operation name.
  *
- * @note       This function is currently very similar to runInput, but is kept
+ * @note       This function is currently very similar to runOutput, but is kept
  * separately in case future iterations of the simulation causes them to change
  * more distinctly.
  * 
