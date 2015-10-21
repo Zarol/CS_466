@@ -35,3 +35,7 @@
 # cannot append .exe to every compiled binary and simply ignore all .exes)
 family
 sim01
+sim02
+
+# Project log files
+*.lgf
