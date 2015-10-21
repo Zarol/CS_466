@@ -16,7 +16,6 @@
 #include <vector>
 #include <thread>
 #include <chrono>
-#include <ctime>
 #include <cstring>
 
 //
@@ -41,7 +40,7 @@ void printConfig();
 // 
 
 // Global program clock as well as total running time
-std::clock_t startTime;
+std::chrono::time_point<std::chrono::system_clock> startTime;
 float duration;
 
 // Global output variables for logging
@@ -90,7 +89,7 @@ enum META_DATA
 int main( int argc, char** argv )
 {    
     // Start the global clock
-    startTime = std::clock();
+    startTime = std::chrono::system_clock::now();
 
     // Set the global string buffer to print out all 6 decimal places
     logOutput.precision( 6 );
@@ -591,7 +590,8 @@ void writeLog( std::string output )
  */
 void setElapsedTime()
 {
-    duration = ( std::clock() - startTime ) / (double) CLOCKS_PER_SEC;
+    duration = ( 
+        (std::chrono::system_clock::now() - startTime).count() ) / 1000000000.0f;
 }
 
 /**
