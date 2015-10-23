@@ -3,8 +3,8 @@
 Simulator::Simulator( Config config, std::list<std::string> operations )
     :   m_config( config )
 {
-    std::cout << Timer::msDT() << " - OS: START Process Preparation" 
-        << std::endl;
+    std::cout << Timer::msDT() << " - OS: " << COLOR_GREEN_BLACK << "START"  
+        << COLOR_NORMAL << " Process Preparation" << std::endl;
     
     operations.pop_front();
 
@@ -13,8 +13,8 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
     if( m_config.schedulingCode == "SJF" )
         buildSJF( operations );
 
-    std::cout << Timer::msDT() << " - OS: END Process Preparation" 
-        << std::endl;
+    std::cout << Timer::msDT() << " - OS: " << COLOR_RED_BLACK << "END"  
+        << COLOR_NORMAL << " Process Preparation" << std::endl;
 }
 
 void Simulator::start()
@@ -22,7 +22,8 @@ void Simulator::start()
     std::list<Application>::iterator appIterator = m_applications.begin();
     while( !( m_applications.empty() ) )
     {
-        std::cout << Timer::msDT() << " - OS: Selecting Next Process" 
+        std::cout << Timer::msDT() << " - OS: " << COLOR_YELLOW_BLACK
+            << "Selecting" << COLOR_NORMAL << " Next Process" 
             << std::endl;
         (*appIterator).start();
         m_applications.erase( appIterator++ );

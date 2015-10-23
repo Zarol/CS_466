@@ -1,6 +1,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include "Escape_Sequences_Colors.h"
 
 #include "timer.h"
 #include "parser.h"
@@ -21,10 +22,12 @@ int main( int argc, char** argv )
         std::string metadata = Parser::loadData( config.filePath );
         std::list<std::string> operations = Parser::splitMetaData( metadata );
         
-        std::cout << Timer::msDT() << " - Simulator START" << std::endl;
+        std::cout << Timer::msDT() << " - Simulator " << COLOR_GREEN_BLACK 
+            << "START" << COLOR_NORMAL << std::endl;
         Simulator sim( config, operations );
         sim.start();
-        std::cout << Timer::msDT() << " - Simulator END" << std::endl;
+        std::cout << Timer::msDT() << " - Simulator " << COLOR_RED_BLACK
+            << "END" << COLOR_NORMAL << std::endl;
         (void) sim;
         return EXIT_SUCCESS;
     }

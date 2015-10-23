@@ -6,6 +6,7 @@
 #include <map>
 #include <thread>
 #include <chrono>
+#include "Escape_Sequences_Colors.h"
 
 #include "config.h"
 #include "parser.h"

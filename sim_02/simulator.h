@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include <algorithm>
+#include "Escape_Sequences_Colors.h"
 
 #include "config.h"
 #include "parser.h"

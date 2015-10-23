@@ -13,7 +13,8 @@ Application::Application( Config config, int appID,
  */
 void Application::start()
 {
-    std::cout << Timer::msDT() << " - OS: START process " << m_appID 
+    std::cout << Timer::msDT() << " - OS: " << COLOR_GREEN_BLACK << "START" 
+        << COLOR_NORMAL << " process " << m_appID 
         << std::endl;
 
     std::list<std::string>::iterator iter = m_operations.begin();
@@ -43,7 +44,8 @@ void Application::start()
         m_operations.erase( iter++ );
     }
 
-    std::cout << Timer::msDT() << " - OS: END process " << m_appID 
+    std::cout << Timer::msDT() << " - OS: " << COLOR_RED_BLACK << "END" 
+        << COLOR_NORMAL << " process " << m_appID 
         << std::endl;
 }
 
@@ -59,13 +61,15 @@ void Application::start()
  */
 void Application::runProcess( int runningTime )
 {
-    std::cout << Timer::msDT() << " - Process " << m_appID 
-        << ": START processing action" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_GREEN_BLACK << "START" << COLOR_NORMAL 
+        << " processing action" << std::endl;
 
     std::this_thread::sleep_for( std::chrono::milliseconds( runningTime ) );
 
-    std::cout << Timer::msDT() << " - Process " << m_appID 
-        << ": END processing action" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_RED_BLACK << "END" << COLOR_NORMAL 
+        << " processing action" << std::endl;
 }
 
 /**
@@ -83,13 +87,15 @@ void Application::runProcess( int runningTime )
  */
 void Application::runInput( std::string name, int runningTime )
 {
-    std::cout << Timer::msDT() << " - Process " << m_appID << ": START " << 
-        name << " input" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_GREEN_BLACK << "START " << COLOR_NORMAL << name << " input" 
+        << std::endl;
 
     std::this_thread::sleep_for( std::chrono::milliseconds( runningTime ) );
 
-    std::cout << Timer::msDT() << " - Process " << m_appID << ": END " << 
-        name << " input" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_RED_BLACK << "END " << COLOR_NORMAL << name << " input" 
+        << std::endl;
 }
 
 /**
@@ -107,13 +113,15 @@ void Application::runInput( std::string name, int runningTime )
  */
 void Application::runOutput( std::string name, int runningTime )
 {
-    std::cout << Timer::msDT() << " - Process " << m_appID << ": START " << 
-        name << " output" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_GREEN_BLACK << "START " << COLOR_NORMAL << name << " output" 
+        << std::endl;
 
     std::this_thread::sleep_for( std::chrono::milliseconds( runningTime ) );
 
-    std::cout << Timer::msDT() << " - Process " << m_appID << ": END " << 
-        name << " output" << std::endl;
+    std::cout << Timer::msDT() << " - Process " << m_appID << ": " 
+        << COLOR_RED_BLACK << "END " << COLOR_NORMAL << name << " output" 
+        << std::endl;
 }
 
 //
