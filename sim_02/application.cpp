@@ -16,10 +16,11 @@ void Application::ApplicationLoop()
     std::cout << Timer::msDT() << " - OS: START process " << m_appID 
         << std::endl;
 
-    // Loop through the operations and "execute" each one
-    for( std::list<std::string>::iterator iter = m_operations.begin();
-         iter != m_operations.end(); ++iter )
+    std::list<std::string>::iterator iter;
+    while( !( m_operations.empty() ) )
     {
+        iter = m_operations.begin();
+
         std::map<std::string, std::string> operation = Parser::splitOperation( 
             *iter );
         int runningTime = calculateOperationTime( operation );
@@ -40,10 +41,9 @@ void Application::ApplicationLoop()
                 operation["Operation"], runningTime );
             outputThread.join();
         }
-        if( iter != m_operations.begin() )
-            m_operations.erase( iter-- );
+        
+        m_operations.erase( iter );
     }
-    m_operations.erase( m_operations.begin() );
 
     std::cout << Timer::msDT() << " - OS: END process " << m_appID 
         << std::endl;
