@@ -165,3 +165,21 @@ int Application::calculateOperationTime(
         
     return 0;
 }
+
+bool operator<( const Application& app1, const Application& app2 )
+{
+    return app1.ApplicationTime < app2.ApplicationTime;
+}
+
+std::ostream& operator<<( std::ostream& os, 
+    const Application& app )
+{
+    os << "[Application " << app.m_appID << "]" << std::endl;
+    for( std::list<std::string>::const_iterator iter = app.m_operations.begin();
+         iter != app.m_operations.end(); ++iter )
+    {
+        os << *iter << std::endl;
+    }
+    os << "[Application " << app.m_appID << "]" << std::endl;
+    return os;
+}

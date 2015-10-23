@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <iostream>
 #include <list>
 #include <map>
 #include <thread>
@@ -30,6 +31,9 @@ private:
     Config m_config;
     int m_appID;
     std::list<std::string> m_operations;
+
+    friend bool operator<( const Application& app1, const Application& app2 );
+    friend std::ostream& operator<<( std::ostream& os, const Application& app );  
 };
 
 #endif  //  APPLICATION_H
