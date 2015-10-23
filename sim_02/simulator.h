@@ -14,6 +14,7 @@ class Simulator
 {
 public:
     Simulator( Config config, std::list<std::string> operations );
+    void start();
 
 private:
     void buildFIFO( std::list<std::string> operations );

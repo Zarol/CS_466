@@ -11,6 +11,9 @@ int main( int argc, char** argv )
 {
     if( argc == 2 )
     {
+        std::cout.precision( 6 );
+        std::cout.setf( std::ios::fixed );
+
         Config config;
         std::string configFile = Parser::loadData( argv[1] );
         Parser::parseConfig( configFile, config );
@@ -20,6 +23,7 @@ int main( int argc, char** argv )
         
         std::cout << Timer::msDT() << " - Simulator START" << std::endl;
         Simulator sim( config, operations );
+        sim.start();
         std::cout << Timer::msDT() << " - Simulator END" << std::endl;
         (void) sim;
         return EXIT_SUCCESS;

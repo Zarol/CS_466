@@ -1,7 +1,7 @@
 Start Simulator Configuration File
 Version/Phase: 2.0
 File Path: Test_5.mdf
-CPU Scheduling Code: FIFO
+CPU Scheduling Code: SJF
 Processor cycle time (msec): 10
 Monitor display time (msec): 20
 Hard drive cycle time (msec): 15

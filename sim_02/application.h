@@ -16,7 +16,7 @@ class Application
 public:
     Application( Config config, int appID, std::list<std::string> operations );
 
-    void ApplicationLoop();
+    void start();
 
     int ApplicationTime;
 private:

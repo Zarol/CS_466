@@ -11,7 +11,7 @@ Application::Application( Config config, int appID,
  * @brief      Executes each process "P", input "I", and output "O" linearly.
  * @details    Each I/O operation executes within its own thread.
  */
-void Application::ApplicationLoop()
+void Application::start()
 {
     std::cout << Timer::msDT() << " - OS: START process " << m_appID 
         << std::endl;

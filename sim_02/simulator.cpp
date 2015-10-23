@@ -17,6 +17,18 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
         << std::endl;
 }
 
+void Simulator::start()
+{
+    std::list<Application>::iterator appIterator = m_applications.begin();
+    while( !( m_applications.empty() ) )
+    {
+        std::cout << Timer::msDT() << " - OS: Selecting Next Process" 
+            << std::endl;
+        (*appIterator).start();
+        m_applications.erase( appIterator++ );
+    }
+}
+
 //
 // PRIVATE HELPER FUNCTIONS ////////////////////////////////////////////////////
 //
