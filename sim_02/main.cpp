@@ -18,6 +18,7 @@ int main( int argc, char** argv )
         std::string metadata = Parser::loadData( config.filePath );
         std::list<std::string> operations = Parser::splitMetaData( metadata );
         Application myApp = Application( config, 1, operations );
+        myApp.ApplicationLoop();
         return EXIT_SUCCESS;
     }
     else
