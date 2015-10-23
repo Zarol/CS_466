@@ -5,7 +5,7 @@
 #include "timer.h"
 #include "parser.h"
 #include "config.h"
-#include "application.h"
+#include "simulator.h"
 
 int main( int argc, char** argv )
 {
@@ -17,8 +17,11 @@ int main( int argc, char** argv )
 
         std::string metadata = Parser::loadData( config.filePath );
         std::list<std::string> operations = Parser::splitMetaData( metadata );
-        Application myApp = Application( config, 1, operations );
-        myApp.ApplicationLoop();
+        
+        std::cout << Timer::msDT() << " - Simulator START" << std::endl;
+        Simulator sim( config, operations );
+        std::cout << Timer::msDT() << " - Simulator END" << std::endl;
+        (void) sim;
         return EXIT_SUCCESS;
     }
     else
