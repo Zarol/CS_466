@@ -16,11 +16,9 @@ void Application::ApplicationLoop()
     std::cout << Timer::msDT() << " - OS: START process " << m_appID 
         << std::endl;
 
-    std::list<std::string>::iterator iter;
+    std::list<std::string>::iterator iter = m_operations.begin();
     while( !( m_operations.empty() ) )
     {
-        iter = m_operations.begin();
-
         std::map<std::string, std::string> operation = Parser::splitOperation( 
             *iter );
         int runningTime = calculateOperationTime( operation );
@@ -42,7 +40,7 @@ void Application::ApplicationLoop()
             outputThread.join();
         }
         
-        m_operations.erase( iter );
+        m_operations.erase( iter++ );
     }
 
     std::cout << Timer::msDT() << " - OS: END process " << m_appID 
