@@ -1,6 +1,7 @@
 CC = g++ -std=c++11
+INC = -I.
 LFLAGS = -Wall -pedantic -pthread
-CFLAGS = -I./Tools -I./Simulation -Wall -pedantic -pthread -c
+CFLAGS = $(INC) -Wall -pedantic -pthread -c
 OBJS = main.o timer.o parser.o simulator.o application.o log.o Tools/config.h Tools/Escape_Sequences_Colors.h
 
 sim02:	$(OBJS)

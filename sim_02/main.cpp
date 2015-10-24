@@ -2,11 +2,11 @@
 #include <list>
 #include <map>
 
-#include "log.h"
-#include "timer.h"
-#include "parser.h"
-#include "config.h"
-#include "simulator.h"
+#include "Tools/log.h"
+#include "Tools/timer.h"
+#include "Tools/parser.h"
+#include "Tools/config.h"
+#include "Simulation/simulator.h"
 
 int main( int argc, char** argv )
 {
