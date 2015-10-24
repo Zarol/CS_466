@@ -1,28 +1,28 @@
 CC = g++ -std=c++11
 LFLAGS = -Wall -pedantic -pthread
-CFLAGS = -Wall -pedantic -pthread -c
-OBJS = main.o timer.o parser.o simulator.o application.o log.o config.h Escape_Sequences_Colors.h
+CFLAGS = -I./Tools -I./Simulation -Wall -pedantic -pthread -c
+OBJS = main.o timer.o parser.o simulator.o application.o log.o Tools/config.h Tools/Escape_Sequences_Colors.h
 
 sim02:	$(OBJS)
 		$(CC) $(LFLAGS) $(OBJS) -o sim02
 
-main.o:	main.cpp timer.h parser.h log.h
+main.o:	main.cpp Tools/timer.h Tools/parser.h Tools/log.h
 		$(CC) $(CFLAGS) main.cpp
 
-timer.o:	timer.cpp timer.h
-			$(CC) $(CFLAGS) timer.cpp
+timer.o:	Tools/timer.cpp Tools/timer.h
+			$(CC) $(CFLAGS) Tools/timer.cpp
 
-parser.o:	parser.cpp parser.h
-			$(CC) $(CFLAGS) parser.cpp
+parser.o:	Tools/parser.cpp Tools/parser.h
+			$(CC) $(CFLAGS) Tools/parser.cpp
 
-simulator.o:	simulator.cpp simulator.h parser.h timer.h application.h log.h
-				$(CC) $(CFLAGS) simulator.cpp		
+simulator.o:	Simulation/simulator.cpp Simulation/simulator.h Tools/parser.h Tools/timer.h Simulation/application.h Tools/log.h
+				$(CC) $(CFLAGS) Simulation/simulator.cpp		
 
-application.o:	application.cpp application.h parser.h timer.h log.h
-				$(CC) $(CFLAGS) application.cpp
+application.o:	Simulation/application.cpp Simulation/application.h Tools/parser.h Tools/timer.h Tools/log.h
+				$(CC) $(CFLAGS) Simulation/application.cpp
 
-log.o:	log.cpp log.h
-		$(CC) $(CFLAGS) log.cpp
+log.o:	Tools/log.cpp Tools/log.h
+		$(CC) $(CFLAGS) Tools/log.cpp
 
 clean:
-	rm sim02 *.o
+	rm -f sim02 *.o
