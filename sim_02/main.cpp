@@ -1,8 +1,8 @@
 #include <iostream>
 #include <list>
 #include <map>
-#include "Escape_Sequences_Colors.h"
 
+#include "log.h"
 #include "timer.h"
 #include "parser.h"
 #include "config.h"
@@ -12,23 +12,20 @@ int main( int argc, char** argv )
 {
     if( argc == 2 )
     {
-        std::cout.precision( 6 );
-        std::cout.setf( std::ios::fixed );
-
         Config config;
         std::string configFile = Parser::loadData( argv[1] );
         Parser::parseConfig( configFile, config );
+        logger.setConfig( config ); 
 
         std::string metadata = Parser::loadData( config.filePath );
         std::list<std::string> operations = Parser::splitMetaData( metadata );
         
-        std::cout << Timer::msDT() << " - Simulator " << COLOR_GREEN_BLACK 
-            << "START" << COLOR_NORMAL << std::endl;
+        logger << Timer::msDT() << " - Simulator " << "START" << "\n";
         Simulator sim( config, operations );
         sim.start();
-        std::cout << Timer::msDT() << " - Simulator " << COLOR_RED_BLACK
-            << "END" << COLOR_NORMAL << std::endl;
-        (void) sim;
+        logger << Timer::msDT() << " - Simulator " << "END" << "\n";
+        
+        logger.closeFile();
         return EXIT_SUCCESS;
     }
     else
