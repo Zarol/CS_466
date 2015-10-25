@@ -20,7 +20,7 @@ public:
 
 private:
     void buildFIFO( std::list<std::string> operations );
-    void buildSJF( std::list<std::string> operations );
+    void buildSJF();
     void printApplications();
 
     Config m_config;

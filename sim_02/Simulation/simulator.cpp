@@ -9,9 +9,11 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
 
     buildFIFO( operations );        
 
-    if( m_config.schedulingCode == "SJF" )
-        buildSJF( operations );
-
+    if( m_config.schedulingCode == "SJF" || 
+        m_config.schedulingCode == "SRTF-N" )
+    {
+        buildSJF();
+    }
     
     logger << Timer::msDT() << " - OS: " << "END" << " process preparation\n";
 }
@@ -21,11 +23,14 @@ void Simulator::start()
     std::list<Application>::iterator appIterator = m_applications.begin();
     while( !( m_applications.empty() ) )
     {
-        
         logger << Timer::msDT() << " - OS: " << "SELECTING" 
             << " next process\n";
+
         (*appIterator).start();
         m_applications.erase( appIterator++ );
+        
+        if( m_config.schedulingCode == "SRTF-N" )
+            buildSJF();
     }
 }
 
@@ -65,7 +70,7 @@ void Simulator::buildFIFO( std::list<std::string> operations )
     }
 }
 
-void Simulator::buildSJF( std::list<std::string> operations )
+void Simulator::buildSJF( )
 {
     m_applications.sort();
 }
