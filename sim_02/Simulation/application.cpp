@@ -1,5 +1,6 @@
 #include "application.h"
 
+
 Application::Application( Config config, int appID, 
     std::list<std::string> operations )
     :   m_config( config ), m_appID( appID ), m_operations( operations )
@@ -16,23 +17,28 @@ void Application::start()
     logger << Timer::msDT() << " - OS: " << "START" << " process "
         << m_appID << "\n";
 
+    // Executes each operation within this Application
     std::list<std::string>::iterator iter = m_operations.begin();
     while( !( m_operations.empty() ) )
     {
+        // Splits the operation into it's component pieces
         std::map<std::string, std::string> operation = Parser::splitOperation( 
             *iter );
         int runningTime = calculateOperationTime( operation );
 
+        // Execute process
         if( operation["Component"] == "P" )
         {
             runProcess( runningTime );
         }
+        // Execute input within it's own thread
         else if( operation["Component"] == "I" )
         {
             std::thread inputThread( &Application::runInput, this, 
                 operation["Operation"], runningTime );
             inputThread.join();
         }
+        // Execute output within it's own thread
         else if( operation["Component"] == "O" )
         {
             std::thread outputThread( &Application::runOutput, this, 
@@ -40,6 +46,7 @@ void Application::start()
             outputThread.join();
         }
         
+        // The operation has been executed, so remove it from the list
         m_operations.erase( iter++ );
     }
 
@@ -124,6 +131,8 @@ void Application::runOutput( std::string name, int runningTime )
 void Application::calculateApplicationTime()
 {
     ApplicationTime = 0;
+    // Iterates through the list of operations, adds each operation's
+    // running time to the total running time
     for( std::list<std::string>::const_iterator iter = m_operations.begin();
          iter != m_operations.end(); ++iter )
     {
@@ -136,12 +145,15 @@ void Application::calculateApplicationTime()
 int Application::calculateOperationTime( 
     std::map<std::string, std::string> operation )
 {
+    // Parse the cycle time to an int
     int cycleTime = std::stoi( operation["Cycle"] );
 
+    // Return a process' cycle time
     if( operation["Component"] == "P" )
     {
         return cycleTime * m_config.processorCycle;
     }
+    // Return an input's / output's cycle time
     else if( operation["Component"] == "I" ||
              operation["Component"] == "O")
     {
@@ -178,6 +190,7 @@ bool operator<( const Application& app1, const Application& app2 )
 std::ostream& operator<<( std::ostream& os, const Application& app )
 {
     os << "[Application " << app.m_appID << "]" << std::endl;
+    // Prints out all the operations on a newline within the application
     for( std::list<std::string>::const_iterator iter = app.m_operations.begin();
          iter != app.m_operations.end(); ++iter )
     {
