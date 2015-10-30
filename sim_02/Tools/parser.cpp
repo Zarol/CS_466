@@ -1,5 +1,9 @@
 #include "parser.h"
 
+//
+// LOAD FILES //////////////////////////////////////////////////////////////////
+//
+
 /**
  * @brief     Writes the contents of a text file to a string parameter.
  * @details   This function will exit the program if the file cannot be opened.
@@ -29,6 +33,10 @@ std::string Parser::loadData( std::string path )
     read.close();
     return temp;
 }
+
+//
+// PARSING FUNCTIONS ///////////////////////////////////////////////////////////
+//
 
 /**
  * @brief      Parses string data into a Config.

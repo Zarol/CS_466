@@ -1,12 +1,27 @@
 #include "application.h"
 
+//
+// CONSTRUCTORS ////////////////////////////////////////////////////////////////
+//
 
+/**
+ * @brief      Default constructor for an "A" operation.
+ *
+ * @param[in]  config      The config file associated with this application.
+ * @param[in]  appID       The unique ID associated with this application.
+ * @param[in]  operations  The list of operations associated with this 
+ * application.
+ */
 Application::Application( Config config, int appID, 
     std::list<std::string> operations )
     :   m_config( config ), m_appID( appID ), m_operations( operations )
 {
     calculateApplicationTime();
 }
+
+//
+// MAIN APP LOOP ///////////////////////////////////////////////////////////////
+//
 
 /**
  * @brief      Executes each process "P", input "I", and output "O" linearly.
@@ -61,7 +76,7 @@ void Application::start()
 /**
  * @brief      Executes a process "P" with a defined wait time.
  *
- * @param[in]  cycleTime  The time in miliseconds to simulate an operation by
+ * @param[in]  runningTime  The time in miliseconds to simulate an operation by
  * sleeping the thread.
  */
 void Application::runProcess( int runningTime )
@@ -85,7 +100,7 @@ void Application::runProcess( int runningTime )
  * 
  * @param[in]  name       The name of the operation. It may be "hard drive",
  * "keyboard", "monitor", or "printer".
- * @param[in]  cycleTime  The time in miliseconds to simulate an operation by
+ * @param[in]  runningTime  The time in miliseconds to simulate an operation by
  * sleeping the thread.
  */
 void Application::runInput( std::string name, int runningTime )
@@ -109,7 +124,7 @@ void Application::runInput( std::string name, int runningTime )
  *
  * @param[in]  name       The name of the operation. It may be "hard drive",
  * "keyboard", "monitor", or "printer".
- * @param[in]  cycleTime  The time in miliseconds to simulate an operation by
+ * @param[in]  runningTime  The time in miliseconds to simulate an operation by
  * sleeping the thread.
  */
 void Application::runOutput( std::string name, int runningTime )
@@ -127,7 +142,10 @@ void Application::runOutput( std::string name, int runningTime )
 // HELPER FUNCTIONS ////////////////////////////////////////////////////////////
 //
 
-
+/**
+ * @brief      Sets this application's ApplicationTime to the total time of all
+ * operations within this Application.
+ */
 void Application::calculateApplicationTime()
 {
     ApplicationTime = 0;
@@ -142,6 +160,13 @@ void Application::calculateApplicationTime()
     }
 }
 
+/**
+ * @brief      Helper function to determine an operation's running time.
+ *
+ * @param[in]  operation  The operation to calculate the running time for.
+ *
+ * @return     The time this operation will take in milliseconds.
+ */
 int Application::calculateOperationTime( 
     std::map<std::string, std::string> operation )
 {
@@ -182,11 +207,29 @@ int Application::calculateOperationTime(
 // OPERATOR OVERLOADS //////////////////////////////////////////////////////////
 //
 
+/**
+ * @brief      An Application is considered to be less than another Application
+ * if its ApplicationTime is less than the other.
+ *
+ * @param[in]  app1  The first application.
+ * @param[in]  app2  The second application.
+ *
+ * @return     True if the first application is less than the second
+ * application, false otherwise.
+ */
 bool operator<( const Application& app1, const Application& app2 )
 {
     return app1.ApplicationTime < app2.ApplicationTime;
 }
 
+/**
+ * @brief      Prints out this Application's ID and operations.
+ *
+ * @param      os    The ostream to print to.
+ * @param[in]  app   The application to print out.
+ *
+ * @return     The ostream with the outputted values.
+ */
 std::ostream& operator<<( std::ostream& os, const Application& app )
 {
     os << "[Application " << app.m_appID << "]" << std::endl;

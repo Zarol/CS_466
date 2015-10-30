@@ -3,6 +3,9 @@
 
 #include <string>
 
+/**
+ * @brief      Mimics a .cnf file.
+ */
 class Config
 {
 public:

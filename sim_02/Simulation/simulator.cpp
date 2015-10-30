@@ -1,5 +1,11 @@
 #include "simulator.h"
 
+/**
+ * @brief      Default constructor to build a simulator.
+ *
+ * @param[in]  config      The configuration associated with this Simulator.
+ * @param[in]  operations  The full list of oeprations to simulate.
+ */
 Simulator::Simulator( Config config, std::list<std::string> operations )
     :   m_config( config )
 {
@@ -21,6 +27,14 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
     logger << Timer::msDT() << " - OS: " << "END" << " process preparation\n";
 }
 
+//
+// MAIN SIMULATOR LOOP /////////////////////////////////////////////////////////
+//
+
+/**
+ * @brief      Starts the simulation by executing each application with the
+ * config's scheduling code.
+ */
 void Simulator::start()
 {
     // Iterate through all of the applications within the simulation
@@ -42,9 +56,17 @@ void Simulator::start()
 }
 
 //
-// PRIVATE HELPER FUNCTIONS ////////////////////////////////////////////////////
+// SCHEDULING CODES ////////////////////////////////////////////////////////////
 //
 
+/**
+ * @brief      Builds the First In First Out scheduling code.
+ * @details    This function will create applications and give every application
+ * their respective operations between A Start and A End. Any operation not
+ * between "A" are discarded.
+ *
+ * @param[in]  operations  The full list of operations to build from.
+ */
 void Simulator::buildFIFO( std::list<std::string> operations )
 {
     // Give each application a unique ID
@@ -89,11 +111,23 @@ void Simulator::buildFIFO( std::list<std::string> operations )
     }
 }
 
+/**
+ * @brief      Builds the Shortest Job First scheduling code.
+ * @note       Currently also used to perform SRTF-N since all it does is
+ * select the next shortest application.
+ */
 void Simulator::buildSJF( )
 {
     m_applications.sort();
 }
 
+//
+// HELPER FUNCTIONS ////////////////////////////////////////////////////////////
+//
+
+/**
+ * @brief      Prints out all applications within this simulator.
+ */
 void Simulator::printApplications()
 {
     // Iterates through the simulator's applications, prints each one
