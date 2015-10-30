@@ -1,3 +1,19 @@
+/** @file main.cpp
+ * @mainpage Operating Systems Simulation - Phase 2
+ * @author   REDACTED
+ * @version  2.00
+ * @brief    This program simulates an Operating System's Scheduler and features
+ * the First In First Out (FIFO), Shortest Job First (SJF), and Shortest
+ * Remaining Time First Non-Preemptive (SRTF-N) scheduling codes.
+ * 
+ * @details  The overlying logic for this program is as follows: The simulator
+ * will create applications that store their own operations. Each application
+ * will be responsible for running their own operations. The simulator will then
+ * select / arrange the next application to start. The simulator will execute
+ * applications until there are no more remaining applications, each application
+ * will execute every operation until there are no more remaining operations.
+ */
+
 #include <iostream>
 #include <list>
 #include <map>
