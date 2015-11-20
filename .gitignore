@@ -36,6 +36,7 @@
 family
 sim01
 sim02
+sim03
 
 # Project log files
 *.lgf
