@@ -16,13 +16,6 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
 
     // Initially build FIFO regardless of scheduling code
     buildFIFO( operations );        
-
-    // Builds SJF / SRTF-N by sorting the FIFO build
-    if( m_config.schedulingCode == "SJF" || 
-        m_config.schedulingCode == "SRTF-N" )
-    {
-        buildSJF();
-    }
     
     logger << Timer::msDT() << " - OS: " << "END" << " process preparation\n";
 }
@@ -37,22 +30,15 @@ Simulator::Simulator( Config config, std::list<std::string> operations )
  */
 void Simulator::start()
 {
-    // Iterate through all of the applications within the simulation
-    std::list<Application>::iterator appIterator = m_applications.begin();
-    while( !( m_applications.empty() ) )
-    {
-        logger << Timer::msDT() << " - OS: " << "SELECTING" 
-            << " next process\n";
-
-        // Execute the applications in its entirety
-        (*appIterator).start();
-        // Remove the application once it has been executed
-        m_applications.erase( appIterator++ );
-        
-        // Re-Sort the applications to pick the next shortest one
-        if( m_config.schedulingCode == "SRTF-N" )
-            buildSJF();
-    }
+    // Executes the proper scheduling algorithm
+    if( m_config.schedulingCode == "RR" )
+        RoundRobin();
+    else if( m_config.schedulingCode == "FIFO-P" )
+        FirstInFirstOutPreEmption();
+    else if( m_config.schedulingCode == "SRTF-P" )
+        ShortestRemainingTimeFirstPreEmption();
+    else
+        logger << "END" << " - ERROR SCHEDULING CODE\n";
 }
 
 //
@@ -77,27 +63,35 @@ void Simulator::buildFIFO( std::list<std::string> operations )
     std::list<std::string>::iterator operationsIter = operations.begin();
     while( !( operations.empty() ) )
     {
-        std::map<std::string, std::string> operation = Parser::splitOperation(
+        std::map<std::string, std::string> opMap = Parser::splitOperation(
             *operationsIter );
+
+        Operation operation( m_config, appID, opMap["Component"], 
+            opMap["Operation"], std::stoi( opMap["Cycle"] ) );
+
         // If the operation is an Application, extract the operations and give it to
         // the operation until that application's section is over
-        if( operation["Component"] == "A" && operation["Operation"] == "start" )
+        if( operation.Component == "A" && operation.Name == "start" )
         {
             appID++;
             // Removes "Application Start"
             operations.erase( operationsIter++ );
 
             // Create a temp list for all of the app's operations
-            std::list<std::string> applicationOperations;
+            std::list<Operation> applicationOperations;
 
-            operation = Parser::splitOperation( *operationsIter );
+            opMap = Parser::splitOperation( *operationsIter );
+            operation = Operation( m_config, appID, opMap["Component"], 
+                opMap["Operation"], std::stoi( opMap["Cycle"] ) );
             // Add each operation until the app's section ends
-            while( operation["Component"] != "A" && 
-                   operation["Operation"] != "stop" )
+            while( operation.Component != "A" && operation.Name != "stop" )
             {
-                applicationOperations.push_back( *operationsIter );
+                applicationOperations.push_back( operation );
                 operations.erase( operationsIter++ );
-                operation = Parser::splitOperation( *operationsIter );
+
+                opMap = Parser::splitOperation( *operationsIter );
+                operation = Operation( m_config, appID, opMap["Component"], 
+                    opMap["Operation"], std::stoi( opMap["Cycle"] ) );
             }
 
             // Create the new application with the extracted operations
@@ -111,29 +105,37 @@ void Simulator::buildFIFO( std::list<std::string> operations )
     }
 }
 
-/**
- * @brief      Builds the Shortest Job First scheduling code.
- * @note       Currently also used to perform SRTF-N since all it does is
- * select the next shortest application.
- */
-void Simulator::buildSJF( )
+void Simulator::RoundRobin()
 {
-    m_applications.sort();
+    // Iterate through all of the applications within the simulation
+    std::list<Application>::iterator appIterator = m_applications.begin();
+    while( !( m_applications.empty() ) )
+    {
+        logger << Timer::msDT() << " - OS: " << "SELECTING" 
+            << " next process\n";
+        while( appIterator == m_applications.end() || 
+               appIterator->Blocked == true )
+        {
+            if( appIterator == m_applications.end() )
+                appIterator = m_applications.begin();
+            else
+                appIterator++;
+        }
+
+        appIterator->start();
+        if( appIterator->ApplicationTime == 0 )
+            m_applications.erase( appIterator++ );
+        else
+            appIterator++;
+    }
 }
 
-//
-// HELPER FUNCTIONS ////////////////////////////////////////////////////////////
-//
-
-/**
- * @brief      Prints out all applications within this simulator.
- */
-void Simulator::printApplications()
+void Simulator::FirstInFirstOutPreEmption()
 {
-    // Iterates through the simulator's applications, prints each one
-    for( std::list<Application>::iterator appIter = m_applications.begin();
-         appIter != m_applications.end(); ++appIter )
-    {
-        std::cout << *appIter << std::endl;
-    }
+
+}
+
+void Simulator::ShortestRemainingTimeFirstPreEmption()
+{
+
 }

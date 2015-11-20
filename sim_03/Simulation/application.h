@@ -4,7 +4,6 @@
 #include <iostream>
 #include <list>
 #include <map>
-#include <thread>
 #include <chrono>
 
 #include "Tools/log.h"
@@ -12,28 +11,25 @@
 #include "Tools/parser.h"
 #include "Tools/timer.h"
 
+#include "operation.h"
+
 class Application
 {
 public:
-    Application( Config config, int appID, std::list<std::string> operations );
+    Application( Config config, int appID, std::list<Operation> operations );
 
     void start();
 
     int ApplicationTime;
+    bool Blocked = false;
 private:
-    void runProcess( int cycleTime );
-    void runInput( std::string name, int cycleTime );
-    void runOutput( std::string name, int cycleTime );
-
     void calculateApplicationTime();
-    int calculateOperationTime( std::map<std::string, std::string> operation );
 
     Config m_config;
     int m_appID;
-    std::list<std::string> m_operations;
+    std::list<Operation> m_operations;
 
     friend bool operator<( const Application& app1, const Application& app2 );
-    friend std::ostream& operator<<( std::ostream& os, const Application& app );
 };
 
 #endif  //  APPLICATION_H

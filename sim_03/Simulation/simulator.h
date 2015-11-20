@@ -11,6 +11,7 @@
 #include "Tools/timer.h"
 
 #include "application.h"
+#include "operation.h"
 
 class Simulator
 {
@@ -20,8 +21,9 @@ public:
 
 private:
     void buildFIFO( std::list<std::string> operations );
-    void buildSJF();
-    void printApplications();
+    void RoundRobin();
+    void FirstInFirstOutPreEmption();
+    void ShortestRemainingTimeFirstPreEmption();
 
     Config m_config;
     std::list<Application> m_applications;
