@@ -47,6 +47,11 @@ void Operation::execute( int& cycles )
     }
 }
 
+/**
+ * @brief      Get the remaining time in ms for this operation.
+ *
+ * @return     The remaining time this operation has in ms.
+ */
 int Operation::getRemainingTime() const
 {
     int cycleTime = 0;

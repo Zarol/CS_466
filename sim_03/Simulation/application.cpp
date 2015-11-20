@@ -35,26 +35,34 @@ void Application::start()
     int remainingQuantumTime = m_config.quantumTime;
     // Executes each operation within this Application
     std::list<Operation>::iterator iter = m_operations.begin();
+
+    // Executes operations until this application runs out of cycles
     while( remainingQuantumTime > 0 )
     {
+        // If there are no operations, then there is no more cycles
         if( m_operations.empty() )
         {
             remainingQuantumTime = 0;
         }
         else
         {
+            // Create interrupt by enabling / disabling a "Blocked" state
             if( iter->Component == "I" || iter->Component == "O" )
             {
                 Blocked = true;
                 iter->execute( remainingQuantumTime );
                 Blocked = false;
+            // Else simply execute the operation
             } else {
                 iter->execute( remainingQuantumTime );
             } 
+
+            // Remove the operation if it is completed
             if( iter->RemainingCycles == 0 )
                 m_operations.erase( iter++ );
         }
 
+        // Recalculate application time, relevant for SRTF-P
         calculateApplicationTime();
     }
 
