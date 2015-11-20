@@ -43,13 +43,20 @@ void Application::start()
         }
         else
         {
-            remainingQuantumTime = iter->execute( remainingQuantumTime );
+            if( iter->Component == "I" || iter->Component == "O" )
+            {
+                Blocked = true;
+                iter->execute( remainingQuantumTime );
+                Blocked = false;
+            } else {
+                iter->execute( remainingQuantumTime );
+            } 
             if( iter->RemainingCycles == 0 )
                 m_operations.erase( iter++ );
         }
-    }
 
-    calculateApplicationTime();
+        calculateApplicationTime();
+    }
 
     logger << Timer::msDT() << " - OS: " << "END" << " process "
         << m_appID << "\n";

@@ -113,6 +113,8 @@ void Simulator::RoundRobin()
     {
         logger << Timer::msDT() << " - OS: " << "SELECTING" 
             << " next process\n";
+
+        // Do not select any I/O blocked applications
         while( appIterator == m_applications.end() || 
                appIterator->Blocked == true )
         {
@@ -122,6 +124,7 @@ void Simulator::RoundRobin()
                 appIterator++;
         }
 
+        // Start the next Application
         appIterator->start();
         if( appIterator->ApplicationTime == 0 )
             m_applications.erase( appIterator++ );
@@ -132,10 +135,69 @@ void Simulator::RoundRobin()
 
 void Simulator::FirstInFirstOutPreEmption()
 {
+    // Iterate through all of the applications within the simulation
+    std::list<Application>::iterator appIterator = m_applications.begin();
+    while( !( m_applications.empty() ) )
+    {
+        logger << Timer::msDT() << " - OS: " << "SELECTING" 
+            << " next process\n";
 
+        // Do not select any I/O blocked applications
+        while( appIterator == m_applications.end() || 
+               appIterator->Blocked == true )
+        {
+            if( appIterator == m_applications.end() )
+                appIterator = m_applications.begin();
+            else
+                appIterator++;
+        }
+
+        // First In First Out, if the front of the list is not
+        // blocked, execute it, because it came in first
+        if( m_applications.begin()->Blocked == false )
+            appIterator = m_applications.begin();
+
+        // Start the next Application
+        appIterator->start();
+
+        // Remove the application if it is completed
+        if( appIterator->ApplicationTime == 0 )
+            m_applications.erase( appIterator++ );
+        else
+            appIterator++;
+    }
 }
 
 void Simulator::ShortestRemainingTimeFirstPreEmption()
 {
+    // Iterate through all of the applications within the simulation
+    
+    while( !( m_applications.empty() ) )
+    {
+        logger << Timer::msDT() << " - OS: " << "SELECTING" 
+            << " next process\n";
 
+        // Arrange the applications by shortest remaining time
+        m_applications.sort();
+        std::list<Application>::iterator appIterator = m_applications.begin();
+
+        // Do not select any I/O blocked applications
+        while( appIterator == m_applications.end() || 
+               appIterator->Blocked == true )
+        {
+            if( appIterator == m_applications.end() )
+                appIterator = m_applications.begin();
+            else
+                appIterator++;
+        }
+
+        // Start the next Application
+        appIterator->start();
+
+        // Remove the application if it is completed
+        if( appIterator->ApplicationTime == 0 )
+            m_applications.erase( appIterator++ );
+        else
+            appIterator++;
+    }
 }

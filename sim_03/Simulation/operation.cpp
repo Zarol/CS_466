@@ -21,10 +21,9 @@ Operation::Operation( Config config, int appID, std::string component,
  * @brief      Execute this operation.
  *
  * @param[in]  cycles  The amount of cycles to execute for.
- *
- * @return     The remaining number of cycles if any.
+ * @param[out] cycles  The remaining amount of cycles, if any.
  */
-int Operation::execute( int cycles )
+void Operation::execute( int& cycles )
 {
     if( Component == "I" || Component == "O" )
     {
@@ -46,8 +45,6 @@ int Operation::execute( int cycles )
     {
         logger << "END" << " - ERROR COMPONENT NAME\n";
     }
-
-    return cycles;
 }
 
 int Operation::getRemainingTime() const

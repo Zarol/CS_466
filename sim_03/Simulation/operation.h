@@ -13,7 +13,7 @@ class Operation
 public:
     Operation( Config config, int appID, std::string component, 
         std::string name, int cycles);
-    int execute( int cycles );
+    void execute( int& cycles );
     int getRemainingTime() const;
 
     std::string Component;
