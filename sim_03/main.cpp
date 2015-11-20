@@ -45,7 +45,7 @@ int main( int argc, char** argv )
         Parser::parseConfig( configFile, config );
 
         //Set the logger class' configuration
-        logger.setConfig( config ); 
+        logger.setConfig( config );
 
         //Parse every meta-data operation into a list
         std::string metadata = Parser::loadData( config.filePath );

@@ -49,7 +49,7 @@ void Parser::parseConfig( std::string data, Config& config )
     //Remove useless first line
     data.erase( 0, data.find( '\n' ) + 1 );
 
-    for( int lineNumber = 0; lineNumber < 10; lineNumber++ )
+    for( int lineNumber = 0; lineNumber < 11; lineNumber++ )
     {
         size_t frontPos = data.find( ": " ) + 2;
         size_t backPos = data.find( '\n' );
